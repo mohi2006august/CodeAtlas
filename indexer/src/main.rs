@@ -4,6 +4,7 @@ use std::path::PathBuf;
 
 use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
+use indexer::index::{self, IndexOptions, Mode};
 use indexer::lang::{self, Detected};
 
 #[derive(Parser)]
@@ -15,6 +16,24 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Index a repository (incremental by default) and print a JSON report.
+    Index {
+        repo: PathBuf,
+        /// SQLite database path (default: <repo>/.codeatlas/atlas.db).
+        #[arg(long)]
+        db: Option<PathBuf>,
+        #[arg(long, value_enum, default_value = "auto")]
+        mode: Mode,
+        /// Skip files larger than this many KiB.
+        #[arg(long, default_value_t = 1024)]
+        max_file_kb: u64,
+        /// Extra gitignore-style patterns to exclude (repeatable).
+        #[arg(long = "exclude")]
+        excludes: Vec<String>,
+        /// Directory depth used as the shard key for monorepos.
+        #[arg(long, default_value_t = 1)]
+        shard_depth: usize,
+    },
     /// List supported languages as JSON.
     Languages,
     /// Print the tree-sitter syntax tree of a file (debugging aid for grammar rules).
@@ -30,6 +49,18 @@ enum Command {
 
 fn main() -> Result<()> {
     match Cli::parse().command {
+        Command::Index { repo, db, mode, max_file_kb, excludes, shard_depth } => {
+            let db = db.unwrap_or_else(|| repo.join(".codeatlas").join("atlas.db"));
+            let report = index::run(&IndexOptions {
+                root: repo,
+                db,
+                mode,
+                max_file_bytes: max_file_kb * 1024,
+                excludes,
+                shard_depth,
+            })?;
+            println!("{}", serde_json::to_string_pretty(&report)?);
+        }
         Command::Languages => {
             let langs: Vec<_> = lang::specs()
                 .iter()
