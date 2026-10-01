@@ -1,0 +1,47 @@
+lang=php lines=45 fallback=false test=false
+module   php:sample.php  [1-45 def 1]
+         sig: module sample.php
+class    php:sample.php::RetryPolicy  [7-30 def 10]
+         sig: class RetryPolicy extends BasePolicy implements Policy
+         doc: Decides when a payment is retried. | /
+         parent: php:sample.php
+method   php:sample.php::RetryPolicy.__construct  [12-12 def 12]
+         sig: public function __construct(private int $maxAttempts = 5)
+         parent: php:sample.php::RetryPolicy
+method   php:sample.php::RetryPolicy.nextDelay  [14-19 def 15]
+         sig: public function nextDelay(int $attempt): int
+         doc: Delay before the next attempt.
+         parent: php:sample.php::RetryPolicy
+method   php:sample.php::RetryPolicy.computeDelay  [21-24 def 21]
+         sig: private function computeDelay(int $attempt): int
+         parent: php:sample.php::RetryPolicy
+method   php:sample.php::RetryPolicy.create  [26-29 def 26]
+         sig: public static function create(): self
+         parent: php:sample.php::RetryPolicy
+class    php:sample.php::Policy  [32-35 def 32]
+         sig: interface Policy
+         parent: php:sample.php
+method   php:sample.php::Policy.nextDelay  [34-34 def 34]
+         sig: public function nextDelay(int $attempt): int;
+         parent: php:sample.php::Policy
+class    php:sample.php::Loggable  [37-40 def 37]
+         sig: trait Loggable
+         parent: php:sample.php
+method   php:sample.php::Loggable.log  [39-39 def 39]
+         sig: public function log(string $m): void
+         parent: php:sample.php::Loggable
+function php:sample.php::charge_with_retry  [42-45 def 42]
+         sig: function charge_with_retry($job)
+         parent: php:sample.php
+ref import    L4   <module> -> clamp via Acme/Billing/Math/Clamp
+ref import    L4   <module> -> math via Acme/Billing/Math
+ref import    L5   <module> -> basepolicy via base_policy
+ref inherit   L10  RetryPolicy -> BasePolicy
+ref inherit   L10  RetryPolicy -> Policy
+ref call      L17  RetryPolicy.nextDelay -> record via Metrics
+ref call      L18  RetryPolicy.nextDelay -> computeDelay via this
+ref call      L23  RetryPolicy.computeDelay -> clamp
+ref call      L28  RetryPolicy.create -> RetryPolicy
+ref call      L39  Loggable.log -> error_log
+ref call      L44  charge_with_retry -> create via RetryPolicy
+ref call      L44  charge_with_retry -> nextDelay via ?

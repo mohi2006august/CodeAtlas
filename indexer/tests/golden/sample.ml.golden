@@ -1,0 +1,28 @@
+lang=ocaml lines=19 fallback=false test=false
+module   ml:sample.ml  [1-19 def 1]
+         sig: module sample.ml
+         doc: Retry helpers.
+class    ml:sample.ml::retry_policy  [4-4 def 4]
+         sig: type retry_policy =
+         parent: ml:sample.ml
+function ml:sample.ml::compute_delay  [6-7 def 7]
+         sig: let compute_delay attempt =
+         doc: Backoff for an attempt.
+         parent: ml:sample.ml
+function ml:sample.ml::next_delay  [9-11 def 9]
+         sig: let next_delay policy attempt =
+         parent: ml:sample.ml
+class    ml:sample.ml::Registry  [15-17 def 15]
+         sig: module Registry =
+         parent: ml:sample.ml
+method   ml:sample.ml::Registry.lookup  [16-16 def 16]
+         sig: let lookup name =
+         parent: ml:sample.ml::Registry
+function ml:sample.ml::retry_loop  [19-19 def 19]
+         sig: let rec retry_loop n =
+         parent: ml:sample.ml
+ref import    L2   <module> -> billingmath via Billing_math
+ref call      L7   compute_delay -> clamp
+ref call      L10  next_delay -> record via Metrics
+ref call      L11  next_delay -> compute_delay
+ref call      L19  retry_loop -> retry_loop

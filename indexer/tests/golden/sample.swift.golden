@@ -1,0 +1,59 @@
+lang=swift lines=39 fallback=false test=false
+module   swift:sample.swift  [1-39 def 1]
+         sig: module sample.swift
+class    swift:sample.swift::Policy  [3-6 def 4]
+         sig: protocol Policy
+         doc: Anything that can decide on a retry.
+         parent: swift:sample.swift
+method   swift:sample.swift::Policy.nextDelay  [5-5 def 5]
+         sig: func nextDelay(attempt: Int) -> Double
+         parent: swift:sample.swift::Policy
+class    swift:sample.swift::RetryPolicy  [8-21 def 9]
+         sig: class RetryPolicy: BasePolicy, Policy
+         doc: Decides when a payment is retried.
+         parent: swift:sample.swift
+method   swift:sample.swift::RetryPolicy.init  [12-14 def 12]
+         sig: init(maxAttempts: Int = 5)
+         parent: swift:sample.swift::RetryPolicy
+method   swift:sample.swift::RetryPolicy.nextDelay  [16-20 def 17]
+         sig: func nextDelay(attempt: Int) -> Double
+         doc: Delay before the next attempt.
+         parent: swift:sample.swift::RetryPolicy
+class    swift:sample.swift::Outcome  [23-25 def 23]
+         sig: struct Outcome
+         parent: swift:sample.swift
+class    swift:sample.swift::Kind  [27-29 def 27]
+         sig: enum Kind
+         parent: swift:sample.swift
+method   swift:sample.swift::RetryPolicy.create  [32-34 def 32]
+         sig: static func create() -> RetryPolicy
+         parent: swift:sample.swift::RetryPolicy
+function swift:sample.swift::computeDelay  [37-39 def 37]
+         sig: func computeDelay(_ attempt: Int) -> Double
+         parent: swift:sample.swift
+ref import    L1   <module> -> foundation via Foundation
+ref ref       L4   Policy -> Policy
+ref ref       L5   Policy.nextDelay -> Double
+ref ref       L5   Policy.nextDelay -> Int
+ref inherit   L9   RetryPolicy -> BasePolicy
+ref inherit   L9   RetryPolicy -> Policy
+ref ref       L9   RetryPolicy -> BasePolicy
+ref ref       L9   RetryPolicy -> Policy
+ref ref       L9   RetryPolicy -> RetryPolicy
+ref ref       L10  RetryPolicy -> Int
+ref ref       L12  RetryPolicy.init -> Int
+ref ref       L17  RetryPolicy.nextDelay -> Double
+ref ref       L17  RetryPolicy.nextDelay -> Int
+ref call      L18  RetryPolicy.nextDelay -> record via Metrics
+ref call      L19  RetryPolicy.nextDelay -> computeDelay
+ref ref       L23  Outcome -> Outcome
+ref ref       L24  Outcome -> Bool
+ref ref       L27  Kind -> Kind
+ref ref       L31  <module> -> RetryPolicy
+ref ref       L32  RetryPolicy.create -> RetryPolicy
+ref call      L33  RetryPolicy.create -> RetryPolicy
+ref ref       L37  computeDelay -> Double
+ref ref       L37  computeDelay -> Int
+ref call      L38  computeDelay -> Double
+ref call      L38  computeDelay -> clamp
+ref call      L38  computeDelay -> pow via ?

@@ -1,0 +1,50 @@
+lang=scala lines=27 fallback=false test=false
+module   scala:sample.scala  [1-27 def 1]
+         sig: module sample.scala
+class    scala:sample.scala::Policy  [6-9 def 7]
+         sig: trait Policy
+         doc: Anything that can decide on a retry.
+         parent: scala:sample.scala
+method   scala:sample.scala::Policy.nextDelay  [8-8 def 8]
+         sig: def nextDelay(attempt: Int): Long
+         parent: scala:sample.scala::Policy
+class    scala:sample.scala::RetryPolicy  [11-18 def 12]
+         sig: class RetryPolicy(maxAttempts: Int = 5) extends BasePolicy with Policy
+         doc: Decides when a payment is retried.
+         parent: scala:sample.scala
+method   scala:sample.scala::RetryPolicy.nextDelay  [13-17 def 14]
+         sig: override def nextDelay(attempt: Int): Long =
+         doc: Delay before the next attempt.
+         parent: scala:sample.scala::RetryPolicy
+class    scala:sample.scala::RetryPolicy~2  [20-25 def 20]
+         sig: object RetryPolicy
+         parent: scala:sample.scala
+method   scala:sample.scala::RetryPolicy.computeDelay  [21-24 def 21]
+         sig: def computeDelay(attempt: Int): Long =
+         parent: scala:sample.scala::RetryPolicy
+method   scala:sample.scala::RetryPolicy.create  [24-24 def 24]
+         sig: def create(): RetryPolicy =
+         parent: scala:sample.scala::RetryPolicy
+class    scala:sample.scala::Outcome  [27-27 def 27]
+         sig: case class Outcome(retry: Boolean)
+         parent: scala:sample.scala
+ref import    L3   <module> -> clamp via com/acme/billing/math/Clamp
+ref import    L3   <module> -> math via com/acme/billing/math
+ref import    L4   <module> -> duration via scala/concurrent/duration
+ref ref       L8   Policy.nextDelay -> Int
+ref ref       L8   Policy.nextDelay -> Long
+ref inherit   L12  RetryPolicy -> BasePolicy
+ref inherit   L12  RetryPolicy -> Policy
+ref ref       L12  RetryPolicy -> BasePolicy
+ref ref       L12  RetryPolicy -> Int
+ref ref       L12  RetryPolicy -> Policy
+ref ref       L14  RetryPolicy.nextDelay -> Int
+ref ref       L14  RetryPolicy.nextDelay -> Long
+ref call      L15  RetryPolicy.nextDelay -> record via Metrics
+ref call      L16  RetryPolicy.nextDelay -> computeDelay via RetryPolicy
+ref ref       L21  RetryPolicy.computeDelay -> Int
+ref ref       L21  RetryPolicy.computeDelay -> Long
+ref call      L22  RetryPolicy.computeDelay -> clamp via Clamp
+ref call      L24  RetryPolicy.create -> RetryPolicy
+ref ref       L24  RetryPolicy.create -> RetryPolicy
+ref ref       L27  Outcome -> Boolean

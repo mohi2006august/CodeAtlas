@@ -19,6 +19,13 @@ enum Command {
     Languages,
     /// Print the tree-sitter syntax tree of a file (debugging aid for grammar rules).
     Sexp { file: PathBuf },
+    /// Extract symbols and unresolved references from one file as JSON.
+    Parse {
+        file: PathBuf,
+        /// Path to report in symbol ids (defaults to the file path as given).
+        #[arg(long)]
+        as_path: Option<String>,
+    },
 }
 
 fn main() -> Result<()> {
@@ -40,6 +47,14 @@ fn main() -> Result<()> {
             parser.set_language(&(spec.language)())?;
             let tree = parser.parse(&src, None).context("parse failed")?;
             println!("{}", tree.root_node().to_sexp());
+        }
+        Command::Parse { file, as_path } => {
+            let src = std::fs::read(&file).with_context(|| format!("reading {}", file.display()))?;
+            let path = as_path.unwrap_or_else(|| file.to_string_lossy().replace('\\', "/"));
+            let Some(index) = indexer::extract::extract_file(&path, &src) else {
+                bail!("{path} is not an indexed file type");
+            };
+            println!("{}", serde_json::to_string_pretty(&index)?);
         }
     }
     Ok(())

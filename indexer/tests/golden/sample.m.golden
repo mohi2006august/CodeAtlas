@@ -1,0 +1,35 @@
+lang=objc lines=31 fallback=false test=false
+module   objc:sample.m  [1-31 def 1]
+         sig: module sample.m
+         doc: Retry policy.
+class    objc:sample.m::Policy  [5-7 def 5]
+         sig: @protocol Policy
+         parent: objc:sample.m
+class    objc:sample.m::RetryPolicy  [9-13 def 9]
+         sig: @interface RetryPolicy : BasePolicy <Policy>
+         parent: objc:sample.m
+method   objc:sample.m::RetryPolicy.nextDelay  [17-21 def 18]
+         sig: - (NSInteger)nextDelay:(NSInteger)attempt
+         doc: Delay before the next attempt.
+         parent: objc:sample.m::RetryPolicy
+method   objc:sample.m::RetryPolicy.create  [23-25 def 23]
+         sig: + (instancetype)create
+         parent: objc:sample.m::RetryPolicy
+function objc:sample.m::computeDelay  [29-31 def 29]
+         sig: NSInteger computeDelay(NSInteger attempt)
+         parent: objc:sample.m
+ref import    L2   <module> -> foundation via Foundation/Foundation
+ref import    L3   <module> -> basepolicy via BasePolicy
+ref ref       L6   Policy -> NSInteger
+ref inherit   L9   RetryPolicy -> BasePolicy
+ref ref       L9   RetryPolicy -> Policy
+ref ref       L10  RetryPolicy -> NSInteger
+ref ref       L12  RetryPolicy -> instancetype
+ref ref       L18  RetryPolicy.nextDelay -> NSInteger
+ref call      L19  RetryPolicy.nextDelay -> record via Metrics
+ref call      L20  RetryPolicy.nextDelay -> computeDelay
+ref ref       L23  RetryPolicy.create -> instancetype
+ref call      L24  RetryPolicy.create -> alloc via RetryPolicy
+ref call      L24  RetryPolicy.create -> init via ?
+ref ref       L29  computeDelay -> NSInteger
+ref call      L30  computeDelay -> clamp

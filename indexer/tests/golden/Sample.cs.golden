@@ -1,0 +1,43 @@
+lang=csharp lines=38 fallback=false test=false
+module   cs:Sample.cs  [1-38 def 1]
+         sig: module Sample.cs
+class    cs:Sample.cs::Acme.Billing.RetryPolicy  [6-26 def 7]
+         sig: public class RetryPolicy : BasePolicy, IPolicy
+         doc: <summary>Decides when a payment is retried.</summary>
+         parent: cs:Sample.cs
+method   cs:Sample.cs::Acme.Billing.RetryPolicy.RetryPolicy  [11-14 def 11]
+         sig: public RetryPolicy(int maxAttempts)
+         parent: cs:Sample.cs::Acme.Billing.RetryPolicy
+method   cs:Sample.cs::Acme.Billing.RetryPolicy.NextDelay  [16-21 def 17]
+         sig: public override long NextDelay(int attempt)
+         doc: Delay before the next attempt.
+         parent: cs:Sample.cs::Acme.Billing.RetryPolicy
+method   cs:Sample.cs::Acme.Billing.RetryPolicy.ComputeDelay  [23-23 def 23]
+         sig: private static long ComputeDelay(int attempt)
+         parent: cs:Sample.cs::Acme.Billing.RetryPolicy
+method   cs:Sample.cs::Acme.Billing.RetryPolicy.Create  [25-25 def 25]
+         sig: public static RetryPolicy Create()
+         parent: cs:Sample.cs::Acme.Billing.RetryPolicy
+class    cs:Sample.cs::Acme.Billing.IPolicy  [28-31 def 28]
+         sig: public interface IPolicy
+         parent: cs:Sample.cs
+method   cs:Sample.cs::Acme.Billing.IPolicy.NextDelay  [30-30 def 30]
+         sig: long NextDelay(int attempt);
+         parent: cs:Sample.cs::Acme.Billing.IPolicy
+class    cs:Sample.cs::Acme.Billing.Outcome  [33-33 def 33]
+         sig: public enum Outcome
+         parent: cs:Sample.cs
+class    cs:Sample.cs::Acme.Billing.Attempt  [35-35 def 35]
+         sig: public record Attempt(int Number);
+         parent: cs:Sample.cs
+class    cs:Sample.cs::Acme.Billing.Delay  [37-37 def 37]
+         sig: public struct Delay
+         parent: cs:Sample.cs
+ref import    L1   <module> -> system via System
+ref import    L2   <module> -> math via Acme/Billing/Math
+ref inherit   L7   Acme.Billing.RetryPolicy -> BasePolicy
+ref inherit   L7   Acme.Billing.RetryPolicy -> IPolicy
+ref call      L19  Acme.Billing.RetryPolicy.NextDelay -> Record via Metrics
+ref call      L20  Acme.Billing.RetryPolicy.NextDelay -> ComputeDelay
+ref call      L23  Acme.Billing.RetryPolicy.ComputeDelay -> Apply via Clamp
+ref call      L25  Acme.Billing.RetryPolicy.Create -> RetryPolicy

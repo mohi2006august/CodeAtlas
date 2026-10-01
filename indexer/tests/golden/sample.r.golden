@@ -1,0 +1,16 @@
+lang=r lines=13 fallback=false test=false
+module   r:sample.r  [1-13 def 1]
+         sig: module sample.r
+         doc: Retry helpers.
+function r:sample.r::compute_delay  [5-8 def 6]
+         sig: compute_delay <- function(attempt, base = 500)
+         doc: Backoff for an attempt.
+         parent: r:sample.r
+function r:sample.r::next_delay  [10-13 def 10]
+         sig: next_delay = function(policy, attempt)
+         parent: r:sample.r
+ref import    L2   <module> -> jsonlite via jsonlite
+ref import    L3   <module> -> math via billing/math
+ref call      L7   compute_delay -> clamp
+ref call      L11  next_delay -> record via metrics
+ref call      L12  next_delay -> compute_delay

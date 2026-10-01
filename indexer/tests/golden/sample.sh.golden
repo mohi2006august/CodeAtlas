@@ -1,0 +1,18 @@
+lang=bash lines=17 fallback=false test=false
+module   sh:sample.sh  [1-17 def 1]
+         sig: module sample.sh
+         doc: Retry helpers.
+function sh:sample.sh::compute_delay  [6-10 def 7]
+         sig: compute_delay()
+         doc: Backoff for an attempt.
+         parent: sh:sample.sh
+function sh:sample.sh::charge_with_retry  [12-15 def 12]
+         sig: function charge_with_retry
+         parent: sh:sample.sh
+ref import    L3   <module> -> log via /lib/log
+ref import    L4   <module> -> math via /lib/math
+ref call      L9   compute_delay -> clamp
+ref call      L13  charge_with_retry -> log_info
+ref call      L14  charge_with_retry -> compute_delay
+ref call      L14  charge_with_retry -> sleep
+ref call      L17  <module> -> charge_with_retry

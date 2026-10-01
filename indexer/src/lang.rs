@@ -727,7 +727,8 @@ fn build_specs() -> Vec<LangSpec> {
     elixir.import_calls = &["alias", "import", "use", "require"];
     elixir.ignore_calls = &[
         "def", "defp", "defmacro", "defmacrop", "defmodule", "defprotocol", "defimpl", "defguard",
-        "defguardp", "defdelegate", "defstruct", "quote", "unquote",
+        "defguardp", "defdelegate", "defstruct", "quote", "unquote", "doc", "moduledoc", "spec",
+        "impl", "type", "typedoc", "behaviour", "callback",
     ];
     elixir.body_kinds = &["do_block"];
     elixir.leading_kinds = &["unary_operator"];
@@ -841,6 +842,7 @@ fn build_specs() -> Vec<LangSpec> {
         call("call_expression", "function"),
     ];
     objc.import_kinds = &["preproc_include", "preproc_import"];
+    objc.sole_wrappers = &["implementation_definition"];
     objc.inherit = &["superclass"];
     objc.body_kinds = &["compound_statement", "field_declaration_list", "enumerator_list"];
     objc.type_ref_kinds = &["type_identifier"];

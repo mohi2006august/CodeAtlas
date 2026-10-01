@@ -1,0 +1,26 @@
+lang=lua lines=27 fallback=false test=false
+module   lua:sample.lua  [1-27 def 1]
+         sig: module sample.lua
+         doc: Retry helpers.
+function lua:sample.lua::compute_delay  [8-11 def 9]
+         sig: local function compute_delay(attempt)
+         doc: Backoff for an attempt.
+         parent: lua:sample.lua
+method   lua:sample.lua::RetryPolicy.new  [13-15 def 13]
+         sig: function RetryPolicy.new(max_attempts)
+         parent: lua:sample.lua
+method   lua:sample.lua::RetryPolicy.next_delay  [17-21 def 18]
+         sig: function RetryPolicy:next_delay(attempt)
+         doc: Delay before the next attempt.
+         parent: lua:sample.lua
+function lua:sample.lua::on_error  [23-25 def 23]
+         sig: local on_error = function(err)
+         parent: lua:sample.lua
+ref import    L2   <module> -> math via billing/math
+ref import    L3   <module> -> metrics via metrics
+ref call      L10  compute_delay -> clamp via math2
+ref call      L14  RetryPolicy.new -> setmetatable
+ref call      L19  RetryPolicy.next_delay -> record via metrics
+ref call      L20  RetryPolicy.next_delay -> compute_delay
+ref call      L24  on_error -> new via RetryPolicy
+ref call      L24  on_error -> next_delay via ?

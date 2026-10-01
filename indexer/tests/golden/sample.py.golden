@@ -1,0 +1,38 @@
+lang=python lines=31 fallback=false test=false
+module   py:sample.py  [1-31 def 1]
+         sig: module sample.py
+         doc: Retry helpers for the billing service.
+function py:sample.py::compute_delay  [7-9 def 7]
+         sig: def compute_delay(attempt: int, base: float = 0.5) -> float:
+         doc: Exponential backoff for a given attempt.
+         parent: py:sample.py
+class    py:sample.py::RetryPolicy  [12-31 def 12]
+         sig: class RetryPolicy(BasePolicy):
+         doc: Decides when a failed payment is retried.
+         parent: py:sample.py
+method   py:sample.py::RetryPolicy.__init__  [15-16 def 15]
+         sig: def __init__(self, max_attempts: int = 5):
+         parent: py:sample.py::RetryPolicy
+method   py:sample.py::RetryPolicy.exhausted  [18-20 def 18]
+         sig: @property def exhausted(self) -> bool:
+         parent: py:sample.py::RetryPolicy
+method   py:sample.py::RetryPolicy.next_delay  [22-25 def 22]
+         sig: def next_delay(self, attempt: int) -> float:
+         parent: py:sample.py::RetryPolicy
+method   py:sample.py::RetryPolicy.run  [27-31 def 27]
+         sig: async def run(self, job: "Job") -> None:
+         parent: py:sample.py::RetryPolicy
+function py:sample.py::RetryPolicy.run.on_error  [28-29 def 28]
+         sig: def on_error(exc):
+         parent: py:sample.py::RetryPolicy.run
+ref import    L2   <module> -> os via os
+ref import    L3   <module> -> base via billing/base
+ref import    L3   <module> -> basepolicy via billing/base/BasePolicy
+ref import    L3   <module> -> clamp via billing/base/clamp
+ref import    L4   <module> -> metrics via /metrics
+ref call      L9   compute_delay -> clamp
+ref inherit   L12  RetryPolicy -> BasePolicy
+ref call      L24  RetryPolicy.next_delay -> record via metrics
+ref call      L25  RetryPolicy.next_delay -> compute_delay
+ref call      L29  RetryPolicy.run.on_error -> next_delay via self
+ref call      L31  RetryPolicy.run -> execute via job

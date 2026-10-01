@@ -1,0 +1,41 @@
+lang=cpp lines=39 fallback=false test=false
+module   cpp:sample.cpp  [1-39 def 1]
+         sig: module sample.cpp
+         doc: Retry policy.
+class    cpp:sample.cpp::billing.RetryPolicy  [7-18 def 8]
+         sig: class RetryPolicy : public BasePolicy
+         doc: Decides when a payment is retried.
+         parent: cpp:sample.cpp
+method   cpp:sample.cpp::billing.RetryPolicy.RetryPolicy  [10-10 def 10]
+         sig: explicit RetryPolicy(int max_attempts) : max_attempts_(max_attempts)
+         parent: cpp:sample.cpp::billing.RetryPolicy
+method   cpp:sample.cpp::billing.RetryPolicy.exhausted  [14-14 def 14]
+         sig: bool exhausted(int attempt) const
+         parent: cpp:sample.cpp::billing.RetryPolicy
+method   cpp:sample.cpp::billing.RetryPolicy.next_delay  [20-23 def 20]
+         sig: int RetryPolicy::next_delay(int attempt) const
+         parent: cpp:sample.cpp::billing.RetryPolicy
+function cpp:sample.cpp::billing.clamp_delay  [25-28 def 25]
+         sig: template <typename T> T clamp_delay(T value)
+         parent: cpp:sample.cpp
+class    cpp:sample.cpp::billing.Outcome  [30-32 def 30]
+         sig: struct Outcome
+         parent: cpp:sample.cpp
+function cpp:sample.cpp::compute_delay  [36-39 def 36]
+         sig: int compute_delay(int attempt)
+         parent: cpp:sample.cpp
+ref import    L2   <module> -> chrono via chrono
+ref import    L3   <module> -> policy via billing/policy
+ref inherit   L8   billing.RetryPolicy -> BasePolicy
+ref ref       L8   billing.RetryPolicy -> BasePolicy
+ref ref       L8   billing.RetryPolicy -> RetryPolicy
+ref call      L21  billing.RetryPolicy.next_delay -> record via metrics
+ref call      L22  billing.RetryPolicy.next_delay -> compute_delay
+ref ref       L25  <module> -> T
+ref ref       L26  billing.clamp_delay -> T
+ref call      L27  billing.clamp_delay -> T
+ref call      L27  billing.clamp_delay -> min via std
+ref ref       L30  billing.Outcome -> Outcome
+ref call      L37  compute_delay -> RetryPolicy via billing
+ref ref       L37  compute_delay -> RetryPolicy
+ref call      L38  compute_delay -> clamp_delay via billing

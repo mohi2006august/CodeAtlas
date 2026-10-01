@@ -1,0 +1,22 @@
+lang=tsx lines=16 fallback=false test=false
+module   ts:sample.tsx  [1-16 def 1]
+         sig: module sample.tsx
+class    ts:sample.tsx::Props  [4-6 def 4]
+         sig: interface Props
+         parent: ts:sample.tsx
+function ts:sample.tsx::RetryBanner  [8-12 def 9]
+         sig: export function RetryBanner({ attempt }: Props)
+         doc: Shows the retry countdown.
+         parent: ts:sample.tsx
+function ts:sample.tsx::RetryButton  [14-16 def 14]
+         sig: export const RetryButton: React.FC<Props> = ({ attempt }) =>
+         parent: ts:sample.tsx
+ref import    L1   <module> -> react via react
+ref import    L2   <module> -> retry via /retry
+ref ref       L4   Props -> Props
+ref ref       L9   RetryBanner -> Props
+ref call      L10  RetryBanner -> useState
+ref call      L11  RetryBanner -> setOpen
+ref ref       L14  RetryButton -> FC
+ref ref       L14  RetryButton -> Props
+ref call      L15  RetryButton -> chargeWithRetry

@@ -1,0 +1,63 @@
+lang=typescript lines=43 fallback=false test=false
+module   ts:sample.ts  [1-43 def 1]
+         sig: module sample.ts
+class    ts:sample.ts::Policy  [4-7 def 5]
+         sig: export interface Policy
+         doc: Anything that can decide on a retry.
+         parent: ts:sample.ts
+method   ts:sample.ts::Policy.nextDelay  [6-6 def 6]
+         sig: nextDelay(attempt: number): number
+         parent: ts:sample.ts::Policy
+class    ts:sample.ts::Millis  [9-9 def 9]
+         sig: export type Millis = number;
+         parent: ts:sample.ts
+class    ts:sample.ts::Outcome  [11-14 def 11]
+         sig: export enum Outcome
+         parent: ts:sample.ts
+class    ts:sample.ts::BasePolicy  [16-18 def 16]
+         sig: export abstract class BasePolicy implements Policy
+         parent: ts:sample.ts
+method   ts:sample.ts::BasePolicy.nextDelay  [17-17 def 17]
+         sig: abstract nextDelay(attempt: number): number
+         parent: ts:sample.ts::BasePolicy
+class    ts:sample.ts::RetryPolicy  [20-33 def 20]
+         sig: export class RetryPolicy extends BasePolicy implements Policy
+         parent: ts:sample.ts
+method   ts:sample.ts::RetryPolicy.constructor  [21-23 def 21]
+         sig: constructor(private readonly maxAttempts: number = 5)
+         parent: ts:sample.ts::RetryPolicy
+method   ts:sample.ts::RetryPolicy.nextDelay  [25-28 def 26]
+         sig: nextDelay(attempt: number): Millis
+         doc: Delay before the next attempt.
+         parent: ts:sample.ts::RetryPolicy
+method   ts:sample.ts::RetryPolicy.decide  [30-32 def 30]
+         sig: decide = (job: Job): Outcome =>
+         parent: ts:sample.ts::RetryPolicy
+function ts:sample.ts::chargeWithRetry  [35-37 def 35]
+         sig: export function chargeWithRetry(job: Job, policy: Policy = new RetryPolicy()): Millis
+         parent: ts:sample.ts
+function ts:sample.ts::Billing.round  [40-42 def 40]
+         sig: export function round(value: number): number
+         parent: ts:sample.ts
+ref import    L1   <module> -> math via /math
+ref import    L2   <module> -> types via /jobs/types
+ref ref       L5   Policy -> Policy
+ref ref       L9   Millis -> Millis
+ref inherit   L16  BasePolicy -> Policy
+ref ref       L16  BasePolicy -> BasePolicy
+ref ref       L16  BasePolicy -> Policy
+ref inherit   L20  RetryPolicy -> BasePolicy
+ref inherit   L20  RetryPolicy -> Policy
+ref ref       L20  RetryPolicy -> Policy
+ref ref       L20  RetryPolicy -> RetryPolicy
+ref call      L22  RetryPolicy.constructor -> super
+ref ref       L26  RetryPolicy.nextDelay -> Millis
+ref call      L27  RetryPolicy.nextDelay -> clamp
+ref ref       L30  RetryPolicy.decide -> Job
+ref ref       L30  RetryPolicy.decide -> Outcome
+ref call      L35  chargeWithRetry -> RetryPolicy
+ref ref       L35  chargeWithRetry -> Job
+ref ref       L35  chargeWithRetry -> Millis
+ref ref       L35  chargeWithRetry -> Policy
+ref call      L36  chargeWithRetry -> nextDelay via policy
+ref call      L41  Billing.round -> round via Math
