@@ -1,0 +1,36 @@
+lang=ruby lines=32 fallback=false test=false
+module   rb:sample.rb  [1-32 def 1]
+         sig: module sample.rb
+         doc: Retry helpers for billing.
+class    rb:sample.rb::Billing  [5-28 def 5]
+         sig: module Billing
+         parent: rb:sample.rb
+class    rb:sample.rb::Billing.RetryPolicy  [7-27 def 7]
+         sig: class RetryPolicy < BasePolicy
+         parent: rb:sample.rb::Billing
+method   rb:sample.rb::Billing.RetryPolicy.initialize  [8-10 def 8]
+         sig: def initialize(max_attempts = 5)
+         parent: rb:sample.rb::Billing.RetryPolicy
+method   rb:sample.rb::Billing.RetryPolicy.next_delay  [12-16 def 13]
+         sig: def next_delay(attempt)
+         doc: Delay before the next attempt.
+         parent: rb:sample.rb::Billing.RetryPolicy
+method   rb:sample.rb::Billing.RetryPolicy.create  [18-20 def 18]
+         sig: def self.create
+         parent: rb:sample.rb::Billing.RetryPolicy
+method   rb:sample.rb::Billing.RetryPolicy.compute_delay  [24-26 def 24]
+         sig: def compute_delay(attempt)
+         parent: rb:sample.rb::Billing.RetryPolicy
+function rb:sample.rb::charge_with_retry  [30-32 def 30]
+         sig: def charge_with_retry(job)
+         parent: rb:sample.rb
+ref import    L2   <module> -> json via json
+ref import    L3   <module> -> basepolicy via /base_policy
+ref inherit   L7   Billing.RetryPolicy -> BasePolicy
+ref call      L14  Billing.RetryPolicy.next_delay -> record via Metrics
+ref call      L15  Billing.RetryPolicy.next_delay -> compute_delay
+ref call      L19  Billing.RetryPolicy.create -> new
+ref call      L25  Billing.RetryPolicy.compute_delay -> clamp
+ref call      L31  charge_with_retry -> attempt via job
+ref call      L31  charge_with_retry -> create via Billing.RetryPolicy
+ref call      L31  charge_with_retry -> next_delay via Billing.RetryPolicy.create

@@ -1,0 +1,57 @@
+lang=kotlin lines=34 fallback=false test=false
+module   kt:sample.kt  [1-34 def 1]
+         sig: module sample.kt
+class    kt:sample.kt::Policy  [6-9 def 7]
+         sig: interface Policy
+         doc: Anything that can decide on a retry.
+         parent: kt:sample.kt
+method   kt:sample.kt::Policy.nextDelay  [8-8 def 8]
+         sig: fun nextDelay(attempt: Int): Long
+         parent: kt:sample.kt::Policy
+class    kt:sample.kt::RetryPolicy  [11-24 def 14]
+         sig: class RetryPolicy(private val maxAttempts: Int = 5) : BasePolicy(), Policy
+         doc: Decides when a payment is retried. | /
+         parent: kt:sample.kt
+method   kt:sample.kt::RetryPolicy.nextDelay  [15-19 def 16]
+         sig: override fun nextDelay(attempt: Int): Long
+         doc: Delay before the next attempt.
+         parent: kt:sample.kt::RetryPolicy
+method   kt:sample.kt::RetryPolicy.create  [22-22 def 22]
+         sig: fun create(): RetryPolicy
+         parent: kt:sample.kt::RetryPolicy
+class    kt:sample.kt::Registry  [26-28 def 26]
+         sig: object Registry
+         parent: kt:sample.kt
+method   kt:sample.kt::Registry.lookup  [27-27 def 27]
+         sig: fun lookup(name: String): Policy
+         parent: kt:sample.kt::Registry
+class    kt:sample.kt::Outcome  [30-30 def 30]
+         sig: data class Outcome(val retry: Boolean)
+         parent: kt:sample.kt
+function kt:sample.kt::computeDelay  [32-34 def 32]
+         sig: fun computeDelay(attempt: Int): Long
+         parent: kt:sample.kt
+ref import    L3   <module> -> clamp via com/acme/billing/math/clamp
+ref import    L3   <module> -> math via com/acme/billing/math
+ref import    L4   <module> -> math via kotlin/math
+ref import    L4   <module> -> pow via kotlin/math/pow
+ref ref       L8   Policy.nextDelay -> Int
+ref ref       L8   Policy.nextDelay -> Long
+ref inherit   L14  RetryPolicy -> BasePolicy
+ref inherit   L14  RetryPolicy -> Policy
+ref ref       L14  RetryPolicy -> BasePolicy
+ref ref       L14  RetryPolicy -> Int
+ref ref       L14  RetryPolicy -> Policy
+ref ref       L16  RetryPolicy.nextDelay -> Int
+ref ref       L16  RetryPolicy.nextDelay -> Long
+ref call      L17  RetryPolicy.nextDelay -> record via Metrics
+ref call      L18  RetryPolicy.nextDelay -> computeDelay
+ref call      L22  RetryPolicy.create -> RetryPolicy
+ref ref       L22  RetryPolicy.create -> RetryPolicy
+ref call      L27  Registry.lookup -> create via RetryPolicy
+ref ref       L27  Registry.lookup -> Policy
+ref ref       L27  Registry.lookup -> String
+ref ref       L30  Outcome -> Boolean
+ref ref       L32  computeDelay -> Int
+ref ref       L32  computeDelay -> Long
+ref call      L33  computeDelay -> clamp

@@ -1,0 +1,31 @@
+lang=julia lines=29 fallback=false test=false
+module   jl:sample.jl  [1-29 def 1]
+         sig: module sample.jl
+         doc: Retry helpers.
+class    jl:sample.jl::Billing.AbstractPolicy  [8-8 def 8]
+         sig: abstract type AbstractPolicy end
+         parent: jl:sample.jl
+class    jl:sample.jl::Billing.RetryPolicy  [10-15 def 13]
+         sig: struct RetryPolicy <: AbstractPolicy
+         doc: Decides when a payment is retried.
+         parent: jl:sample.jl
+function jl:sample.jl::Billing.next_delay  [17-21 def 18]
+         sig: function next_delay(policy::RetryPolicy, attempt::Int)
+         doc: Delay before the next attempt.
+         parent: jl:sample.jl
+function jl:sample.jl::Billing.compute_delay  [23-23 def 23]
+         sig: compute_delay(attempt) = clamp(500 * 2^attempt, 0, 30000)
+         parent: jl:sample.jl
+function jl:sample.jl::Billing.retry  [25-27 def 25]
+         sig: macro retry(ex)
+         parent: jl:sample.jl
+ref import    L4   <module> -> dates via Dates
+ref import    L5   <module> -> math via Math
+ref import    L6   <module> -> metrics via /metrics
+ref inherit   L13  Billing.RetryPolicy -> AbstractPolicy
+ref call      L18  Billing.next_delay -> next_delay
+ref call      L19  Billing.next_delay -> record via Metrics
+ref call      L20  Billing.next_delay -> compute_delay
+ref call      L23  Billing.compute_delay -> clamp
+ref call      L23  Billing.compute_delay -> compute_delay
+ref call      L25  Billing.retry -> retry

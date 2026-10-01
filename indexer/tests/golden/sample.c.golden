@@ -1,0 +1,32 @@
+lang=c lines=22 fallback=false test=false
+module   c:sample.c  [1-22 def 1]
+         sig: module sample.c
+         doc: Retry helpers.
+function c:sample.c::MAX_DELAY  [5-5 def 5]
+         sig: #define MAX_DELAY(x) ((x) > 30000 ? 30000 : (x))
+         parent: c:sample.c
+class    c:sample.c::retry_policy_t  [7-9 def 7]
+         sig: typedef struct retry_policy
+         parent: c:sample.c
+class    c:sample.c::retry_policy  [7-9 def 7]
+         sig: struct retry_policy
+         parent: c:sample.c::retry_policy_t
+class    c:sample.c::outcome  [11-11 def 11]
+         sig: enum outcome
+         parent: c:sample.c
+function c:sample.c::compute_delay  [13-16 def 14]
+         sig: static int compute_delay(int attempt)
+         doc: Backoff for an attempt.
+         parent: c:sample.c
+function c:sample.c::next_delay  [18-22 def 18]
+         sig: int *next_delay(const retry_policy_t *policy, int attempt)
+         parent: c:sample.c
+ref import    L2   <module> -> stdio via stdio
+ref import    L3   <module> -> math via billing/math
+ref ref       L7   retry_policy -> retry_policy
+ref ref       L9   retry_policy_t -> retry_policy_t
+ref call      L15  compute_delay -> clamp
+ref ref       L18  next_delay -> retry_policy_t
+ref call      L19  next_delay -> record_metric
+ref call      L20  next_delay -> compute_delay
+ref call      L20  next_delay -> printf

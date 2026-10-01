@@ -1,0 +1,35 @@
+lang=go lines=32 fallback=false test=false
+module   go:sample.go  [1-32 def 1]
+         sig: module sample.go
+         doc: Package billing handles payment retries.
+class    go:sample.go::RetryPolicy  [10-13 def 11]
+         sig: type RetryPolicy struct
+         doc: RetryPolicy decides when a payment is retried.
+         parent: go:sample.go
+class    go:sample.go::Policy  [15-17 def 15]
+         sig: type Policy interface
+         parent: go:sample.go
+function go:sample.go::NewRetryPolicy  [19-22 def 20]
+         sig: func NewRetryPolicy(max int) *RetryPolicy
+         doc: NewRetryPolicy builds a policy.
+         parent: go:sample.go
+method   go:sample.go::RetryPolicy.NextDelay  [24-28 def 25]
+         sig: func (p *RetryPolicy) NextDelay(attempt int) time.Duration
+         doc: NextDelay returns the backoff for an attempt.
+         parent: go:sample.go::RetryPolicy
+function go:sample.go::computeDelay  [30-32 def 30]
+         sig: func computeDelay(attempt int) int
+         parent: go:sample.go
+ref import    L5   <module> -> time via time
+ref import    L7   <module> -> metrics via github.com/acme/app/metrics
+ref ref       L11  RetryPolicy -> RetryPolicy
+ref ref       L15  Policy -> Policy
+ref ref       L16  Policy -> Duration
+ref ref       L20  NewRetryPolicy -> RetryPolicy
+ref call      L21  NewRetryPolicy -> RetryPolicy
+ref ref       L25  RetryPolicy.NextDelay -> Duration
+ref ref       L25  RetryPolicy.NextDelay -> RetryPolicy
+ref call      L26  RetryPolicy.NextDelay -> Record via m
+ref call      L27  RetryPolicy.NextDelay -> Duration via time
+ref call      L27  RetryPolicy.NextDelay -> computeDelay
+ref call      L31  computeDelay -> clamp

@@ -1,0 +1,39 @@
+lang=javascript lines=33 fallback=false test=false
+module   js:sample.js  [1-33 def 1]
+         sig: module sample.js
+         doc: Payment retry helpers.
+function js:sample.js::computeDelay  [5-10 def 8]
+         sig: export function computeDelay(attempt, base = 0.5)
+         doc: Exponential backoff for an attempt. | /
+         parent: js:sample.js
+function js:sample.js::withJitter  [12-12 def 12]
+         sig: export const withJitter = (delay) =>
+         parent: js:sample.js
+class    js:sample.js::RetryPolicy  [14-29 def 14]
+         sig: export class RetryPolicy extends BasePolicy
+         parent: js:sample.js
+method   js:sample.js::RetryPolicy.constructor  [15-18 def 15]
+         sig: constructor(maxAttempts = 5)
+         parent: js:sample.js::RetryPolicy
+method   js:sample.js::RetryPolicy.nextDelay  [20-24 def 21]
+         sig: nextDelay(attempt)
+         doc: Delay before the next attempt.
+         parent: js:sample.js::RetryPolicy
+method   js:sample.js::RetryPolicy.create  [26-28 def 26]
+         sig: static create()
+         parent: js:sample.js::RetryPolicy
+function js:sample.js::legacyRetry  [31-33 def 31]
+         sig: module.exports.legacyRetry = function (job)
+         parent: js:sample.js
+ref import    L2   <module> -> math via /math
+ref import    L3   <module> -> metrics via /metrics
+ref call      L9   computeDelay -> clamp
+ref call      L12  withJitter -> random via Math
+ref inherit   L14  RetryPolicy -> BasePolicy
+ref call      L16  RetryPolicy.constructor -> super
+ref call      L22  RetryPolicy.nextDelay -> record via metrics
+ref call      L23  RetryPolicy.nextDelay -> computeDelay
+ref call      L23  RetryPolicy.nextDelay -> withJitter
+ref call      L27  RetryPolicy.create -> RetryPolicy
+ref call      L32  legacyRetry -> create via RetryPolicy
+ref call      L32  legacyRetry -> nextDelay via ?

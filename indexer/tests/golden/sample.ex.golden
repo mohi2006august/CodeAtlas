@@ -1,0 +1,26 @@
+lang=elixir lines=23 fallback=false test=false
+module   ex:sample.ex  [1-23 def 1]
+         sig: module sample.ex
+class    ex:sample.ex::Billing.RetryPolicy  [1-23 def 1]
+         sig: defmodule Billing.RetryPolicy
+         doc: Decides when a payment is retried.
+         parent: ex:sample.ex
+method   ex:sample.ex::Billing.RetryPolicy.next_delay  [8-14 def 9]
+         sig: def next_delay(attempt) when attempt > 10, do: 30_000
+         doc: Delay before the next attempt.
+         parent: ex:sample.ex::Billing.RetryPolicy
+method   ex:sample.ex::Billing.RetryPolicy.compute_delay  [16-18 def 16]
+         sig: defp compute_delay(attempt)
+         parent: ex:sample.ex::Billing.RetryPolicy
+method   ex:sample.ex::Billing.RetryPolicy.retry  [20-22 def 20]
+         sig: defmacro retry(do: block)
+         parent: ex:sample.ex::Billing.RetryPolicy
+ref import    L5   <module> -> math via Billing/Math
+ref import    L6   <module> -> metrics via Billing/Metrics
+ref call      L9   Billing.RetryPolicy.next_delay -> next_delay
+ref call      L12  Billing.RetryPolicy.next_delay -> record
+ref call      L13  Billing.RetryPolicy.next_delay -> compute_delay
+ref call      L16  Billing.RetryPolicy.compute_delay -> compute_delay
+ref call      L17  Billing.RetryPolicy.compute_delay -> clamp via Math
+ref call      L17  Billing.RetryPolicy.compute_delay -> pow via Integer
+ref call      L20  Billing.RetryPolicy.retry -> retry

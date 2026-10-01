@@ -1,0 +1,28 @@
+lang=haskell lines=27 fallback=false test=false
+module   hs:sample.hs  [1-27 def 1]
+         sig: module sample.hs
+         doc: Retry helpers.
+class    hs:sample.hs::RetryPolicy  [8-10 def 8]
+         sig: data RetryPolicy =
+         parent: hs:sample.hs
+class    hs:sample.hs::Policy  [12-13 def 12]
+         sig: class Policy p where
+         parent: hs:sample.hs
+method   hs:sample.hs::Policy.delayFor  [16-16 def 16]
+         sig: delayFor _
+         parent: hs:sample.hs::Policy
+function hs:sample.hs::nextDelay  [18-21 def 20]
+         sig: nextDelay :: Int -> Int
+         doc: Delay before the next attempt.
+         parent: hs:sample.hs
+function hs:sample.hs::computeDelay  [23-24 def 24]
+         sig: computeDelay :: Int -> Int
+         parent: hs:sample.hs
+function hs:sample.hs::defaultPolicy  [26-27 def 27]
+         sig: defaultPolicy :: RetryPolicy
+         parent: hs:sample.hs
+ref import    L4   <module> -> math via Billing/Math
+ref import    L5   <module> -> map via Data/Map
+ref call      L21  nextDelay -> clamp
+ref call      L21  nextDelay -> computeDelay
+ref call      L27  defaultPolicy -> RetryPolicy

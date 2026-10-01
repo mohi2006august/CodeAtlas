@@ -1,0 +1,29 @@
+lang=zig lines=24 fallback=false test=false
+module   zig:sample.zig  [1-24 def 1]
+         sig: module sample.zig
+         doc: Retry helpers.
+class    zig:sample.zig::RetryPolicy  [5-14 def 6]
+         sig: pub const RetryPolicy =
+         doc: Decides when a payment is retried.
+         parent: zig:sample.zig
+method   zig:sample.zig::RetryPolicy.nextDelay  [9-13 def 10]
+         sig: pub fn nextDelay(self: RetryPolicy, attempt: u32) u64
+         doc: Delay before the next attempt.
+         parent: zig:sample.zig::RetryPolicy
+class    zig:sample.zig::Outcome  [16-16 def 16]
+         sig: const Outcome =
+         parent: zig:sample.zig
+function zig:sample.zig::computeDelay  [18-20 def 18]
+         sig: fn computeDelay(attempt: u32) u64
+         parent: zig:sample.zig
+function zig:sample.zig::test_caps_delay  [22-24 def 22] test
+         sig: test "caps delay"
+         parent: zig:sample.zig
+ref import    L2   <module> -> std via std
+ref import    L3   <module> -> math via /billing/math
+ref call      L12  RetryPolicy.nextDelay -> computeDelay
+ref call      L19  computeDelay -> as via ?
+ref call      L19  computeDelay -> clamp via math
+ref test_name L22  test_caps_delay -> capsdelay
+ref call      L23  test_caps_delay -> computeDelay
+ref call      L23  test_caps_delay -> expect via std.testing

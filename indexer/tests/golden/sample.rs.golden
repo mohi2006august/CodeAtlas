@@ -1,0 +1,57 @@
+lang=rust lines=54 fallback=false test=false
+module   rs:sample.rs  [1-54 def 1]
+         sig: module sample.rs
+         doc: Retry policy for failed payments.
+class    rs:sample.rs::RetryPolicy  [7-11 def 9]
+         sig: pub struct RetryPolicy
+         doc: Decides when a payment is retried.
+         parent: rs:sample.rs
+class    rs:sample.rs::Policy  [13-15 def 13]
+         sig: pub trait Policy
+         parent: rs:sample.rs
+method   rs:sample.rs::Policy.next_delay  [14-14 def 14]
+         sig: fn next_delay(&self, attempt: u32) -> Duration;
+         parent: rs:sample.rs::Policy
+method   rs:sample.rs::RetryPolicy.new  [18-21 def 19]
+         sig: pub fn new(max_attempts: u32) -> Self
+         doc: Create a policy.
+         parent: rs:sample.rs::RetryPolicy
+method   rs:sample.rs::RetryPolicy.next_delay  [25-28 def 25]
+         sig: fn next_delay(&self, attempt: u32) -> Duration
+         parent: rs:sample.rs::RetryPolicy
+function rs:sample.rs::compute_delay  [31-33 def 31]
+         sig: pub fn compute_delay(attempt: u32) -> u64
+         parent: rs:sample.rs
+class    rs:sample.rs::Outcome  [35-38 def 35]
+         sig: pub enum Outcome
+         parent: rs:sample.rs
+function rs:sample.rs::retry  [40-44 def 40]
+         sig: macro_rules! retry
+         parent: rs:sample.rs
+function rs:sample.rs::tests.caps_delay  [50-53 def 51] test
+         sig: fn caps_delay()
+         parent: rs:sample.rs
+ref import    L2   <module> -> clamp via billing/math/clamp
+ref import    L2   <module> -> math via billing/math
+ref import    L3   <module> -> collections via std/collections
+ref import    L3   <module> -> duration via std/time/Duration
+ref import    L3   <module> -> hashmap via std/collections/HashMap
+ref import    L3   <module> -> time via std/time
+ref import    L5   <module> -> metrics via metrics
+ref ref       L9   RetryPolicy -> RetryPolicy
+ref ref       L13  Policy -> Policy
+ref ref       L14  Policy.next_delay -> Duration
+ref ref       L17  <module> -> RetryPolicy
+ref ref       L19  RetryPolicy.new -> Self
+ref call      L20  RetryPolicy.new -> RetryPolicy
+ref ref       L20  RetryPolicy.new -> RetryPolicy
+ref ref       L24  <module> -> Policy
+ref inherit   L24  RetryPolicy -> Policy
+ref ref       L25  RetryPolicy.next_delay -> Duration
+ref call      L26  RetryPolicy.next_delay -> record via metrics
+ref call      L27  RetryPolicy.next_delay -> compute_delay
+ref call      L27  RetryPolicy.next_delay -> from_millis via Duration
+ref call      L32  compute_delay -> clamp
+ref call      L32  compute_delay -> pow via 2u64
+ref ref       L35  Outcome -> Outcome
+ref call      L52  tests.caps_delay -> assert_eq
